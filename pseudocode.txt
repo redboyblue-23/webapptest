@@ -1,0 +1,35 @@
+START MemoryCardGame
+
+SET symbols = ["🍎", "🍎", "🍌", "🍌", "🍇", "🍇", "🍉", "🍉"]
+SET shuffledSymbols = SHUFFLE(symbols)
+SET selectedCards = []
+SET matchedPairs = 0
+
+FUNCTION createBoard():
+    FOR EACH symbol IN shuffledSymbols:
+        CREATE card with hidden symbol
+        WAIT for user to click
+    END FOR
+END FUNCTION
+
+FUNCTION flipCard(card):
+    IF selectedCards.length < 2 AND card is hidden:
+        REVEAL card
+        ADD card to selectedCards
+    ENDIF
+
+    IF selectedCards.length == 2:
+        CALL checkMatch()
+    ENDIF
+END FUNCTION
+
+FUNCTION checkMatch():
+    IF selectedCards[0] == selectedCards[1] THEN
+        INCREMENT matchedPairs
+    ELSE
+        HIDE both cards
+    ENDIF
+    CLEAR selectedCards
+END FUNCTION
+
+CALL createBoard()
